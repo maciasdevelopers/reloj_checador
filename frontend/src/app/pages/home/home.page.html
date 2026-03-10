@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Reloj Checador</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="info-card" *ngIf="status">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Mi Horario de Hoy</ion-card-title>
+      </ion-card-header>
+      <ion-card-content *ngIf="status.schedule; else noSchedule">
+        <p><b>Día:</b> {{ status.schedule.day_of_week | titlecase }}</p>
+        <p><b>Entrada:</b> {{ status.schedule.start_time }}</p>
+        <p><b>Salida:</b> {{ status.schedule.end_time }}</p>
+      </ion-card-content>
+      <ng-template #noSchedule>
+        <ion-card-content>
+          No hay horario registrado para hoy.
+        </ion-card-content>
+      </ng-template>
+    </ion-card>
+  </div>
+
+  <div class="attendance-controls">
+    <ion-button
+      *ngIf="!status?.is_checked_in"
+      expand="block"
+      size="large"
+      color="success"
+      (click)="handleAction('checkIn')">
+      Marcar Entrada
+    </ion-button>
+
+    <ion-button
+      *ngIf="status?.is_checked_in"
+      expand="block"
+      size="large"
+      color="danger"
+      (click)="handleAction('checkOut')">
+      Marcar Salida
+    </ion-button>
+  </div>
+
+  <ion-list class="ion-margin-top" *ngIf="status?.last_attendance">
+    <ion-list-header>Último Registro</ion-list-header>
+    <ion-item>
+      <ion-label>
+        <h2>Entrada: {{ status.last_attendance.check_in | date:'short' }}</h2>
+        <p *ngIf="status.last_attendance.check_out">Salida: {{ status.last_attendance.check_out | date:'short' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
